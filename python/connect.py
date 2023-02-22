@@ -17,7 +17,8 @@ interface = Interface(SERIAL_PORT)
 #import processing
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def run():
     options = {
         'serial_port': SERIAL_PORT,
         'read_timeout': READ_TIMEOUT,
@@ -33,4 +34,6 @@ if __name__ == '__main__':
 
     time.sleep(1)
 
-    app.run(host='0.0.0.0', port=80, debug=True)
+    interface.scrollingLayer1_start(b'testtttt', -1)
+
+    #app.run(host='0.0.0.0', port=80, debug=True)
