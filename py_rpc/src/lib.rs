@@ -1,14 +1,24 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use pyo3::prelude::*;
+//use pyo3::types::PyTuple;
+
+fn main() -> PyResult<()> {
+    let py_connect = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/python/connect.py"));
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let connect: Py<PyAny> = PyModule::from_code(py, py_connect, "", "")?
+            .getattr("connect")?
+            .into();
+        let connect: Py<PyAny> = connect();
+        connect.call0(py)
+    });
+
+    Ok(())
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+fn connect() -> PyResult<()> {
+    let py_connect = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/python/connect.py"));
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        PyModule::from_code(py, py_connect, "", "")?.getattr("connect")?.into()
+    });
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+    Ok(())
 }
