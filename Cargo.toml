@@ -1,10 +1,6 @@
-[package]
-name = "qyron-tui"
-version = "0.1.0"
-edition = "2021"
+[workspace]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-rppal = "0.14.1"
-notcurses = "3.2.2"
+members = [
+    "py_rpc",
+    "crownet",
+]
