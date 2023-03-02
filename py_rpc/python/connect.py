@@ -26,5 +26,12 @@ def connect():
 
     test()
 
-def test():
-    interface.scrollingLayer1_start(b'test1', -1)
+def caw():
+    interface.scrollingLayer1_start(b'CAWCAWCAW', -1)
+
+def dopamine():
+    interface.scrollingLayer2_start(b'DOPAMINE DOPAMINE DOPAMINE', -1)
+
+def clear():
+    interface.scrollingLayer1_start(b'', -1)
+    interface.scrollingLayer2_start(b'', -1)

@@ -3,6 +3,9 @@ use notcurses::*;
 use notcurses::sys::{widgets::*, *};
 
 fn main() -> NcResult<()> {
+    let rpc_config = py_rpc::Config::new();
+    py_rpc::connect(&rpc_config);
+
     let nc: &mut Nc = unsafe { Nc::new()? };
     //TODO why do I have to use NcPlane instead of Plane?
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
@@ -12,11 +15,12 @@ fn main() -> NcResult<()> {
     let selplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts)?;
 
     let selector = NcSelector::builder()
-        .item("PARODY", "IN MINECRAFT, IN MINECRAFT, NOT LEGALLY ACTIONABLE, TOTALLY MAKE BELIEVE")
+        .item("clear", "clears the chyron")
+        .item("CAW", "CAW CAW CAW CAW CAW")
         .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
         .title("CrowNet")
         .secondary("Institute for Advanced Levels")
-        .footer("CAW CAW CAW")
+        .footer("The Too Late Show with Dr. Beelzebub Crow")
         .max_display(4)
         .default_item(1)
         .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
@@ -28,18 +32,29 @@ fn main() -> NcResult<()> {
         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
         .finish(selplane)?;
 
-    let selected: String = run_selector(nc, selector)?;
+    let selected: String = run_selector(nc, selector, &rpc_config)?;
+
+//    send_choice(selected.as_str(), &rpc_config);
 
     selector.destroy()?;
 
     unsafe { nc.stop()? };
 
-    println!("{}", selected);
-
     Ok(())
 }
 
-fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
+//TODO this should use an enum
+fn send_choice(choice: String, rpc_config: &py_rpc::Config) {
+    let choice = choice.as_str();
+    match choice {
+        "clear" => py_rpc::clear(&rpc_config),
+        "CAW" => py_rpc::caw(&rpc_config),
+        "DOPAMINE" => py_rpc::dopamine(&rpc_config),
+        _ => Ok(())
+    };
+}
+
+fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config) -> NcResult<String> {
     let mut ni: NcInput = NcInput::new_empty();
 
     // do not wait for input before first rendering
@@ -74,7 +89,8 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
                 },
                 NcReceived::Key(ev) => match ev {
                     NcKey::Enter => {
-                        return selector.selected().ok_or_else(|| NcError::new());
+                        let choice = selector.selected().ok_or_else(|| NcError::new())?;
+                        send_choice(choice.clone(), &rpc_config);
                     },
                     _ => (),
                 },
