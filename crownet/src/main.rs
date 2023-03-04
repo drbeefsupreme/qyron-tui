@@ -2,6 +2,8 @@ use py_rpc;
 use notcurses::*;
 use notcurses::sys::{widgets::*, *};
 
+use crownet::Command;
+
 fn main() -> NcResult<()> {
     let rpc_config = py_rpc::Config::new();
     py_rpc::connect(&rpc_config);
@@ -15,9 +17,12 @@ fn main() -> NcResult<()> {
     let selplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts)?;
 
     let selector = NcSelector::builder()
-        .item("clear", "clears the chyron")
+        .item("Clear", "clears the chyron")
         .item("CAW", "CAW CAW CAW CAW CAW")
         .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
+        .item("Random pixels", "asdfasdhfkalshdg")
+        .item("Random shapes", "yes")
+        .item("Temperature", "DEBUG: CPU temp")
         .title("CrowNet")
         .secondary("Institute for Advanced Levels")
         .footer("The Too Late Show with Dr. Beelzebub Crow")
@@ -32,9 +37,7 @@ fn main() -> NcResult<()> {
         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
         .finish(selplane)?;
 
-    let selected: String = run_selector(nc, selector, &rpc_config)?;
-
-//    send_choice(selected.as_str(), &rpc_config);
+    run_selector(nc, selector, &rpc_config)?;
 
     selector.destroy()?;
 
@@ -43,18 +46,19 @@ fn main() -> NcResult<()> {
     Ok(())
 }
 
-//TODO this should use an enum
-fn send_choice(choice: String, rpc_config: &py_rpc::Config) {
-    let choice = choice.as_str();
+fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
     match choice {
-        "clear" => py_rpc::clear(&rpc_config),
-        "CAW" => py_rpc::caw(&rpc_config),
-        "DOPAMINE" => py_rpc::dopamine(&rpc_config),
-        _ => Ok(())
+        Command::Clear => py_rpc::clear(&rpc_config),
+        Command::Caw => py_rpc::caw(&rpc_config),
+        Command::Dopamine => py_rpc::dopamine(&rpc_config),
+        Command::RandomPixels => py_rpc::pixels(&rpc_config),
+        Command::RandomShapes => py_rpc::shapes(&rpc_config),
+        Command::Temperature => py_rpc::temp(&rpc_config),
+        _ => Ok(()),
     };
 }
 
-fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config) -> NcResult<String> {
+fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config) -> NcResult<Command> {
     let mut ni: NcInput = NcInput::new_empty();
 
     // do not wait for input before first rendering
@@ -74,7 +78,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Con
                     match ch {
                         // Q => quit
                         'q' | 'Q' => {
-                            return selector.selected().ok_or_else(|| NcError::new());
+                            return Ok(Command::Quit);
                         },
                         // S => down
                         's' | 'S' => {
@@ -90,7 +94,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Con
                 NcReceived::Key(ev) => match ev {
                     NcKey::Enter => {
                         let choice = selector.selected().ok_or_else(|| NcError::new())?;
-                        send_choice(choice.clone(), &rpc_config);
+                        send_choice(Command::from_str(&choice), &rpc_config);
                     },
                     _ => (),
                 },
