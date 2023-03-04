@@ -15,10 +15,10 @@ impl Config {
 //TODO: return an error if fail to connect
 pub fn connect(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-        let connect: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("connect")?
             .into();
-        connect.call0(py)
+        hand.call0(py)
     })?;
 
     Ok(())
@@ -26,10 +26,10 @@ pub fn connect(config: &Config) -> PyResult<()> {
 
 pub fn caw(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-        let caw: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("caw")?
             .into();
-        caw.call0(py)
+        hand.call0(py)
     })?;
 
     Ok(())
@@ -37,10 +37,10 @@ pub fn caw(config: &Config) -> PyResult<()> {
 
 pub fn dopamine(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-        let dopamine: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("dopamine")?
             .into();
-        dopamine.call0(py)
+        hand.call0(py)
     })?;
 
     Ok(())
@@ -48,10 +48,43 @@ pub fn dopamine(config: &Config) -> PyResult<()> {
 
 pub fn clear(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-        let clear: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("clear")?
             .into();
-        clear.call0(py)
+        hand.call0(py)
+    })?;
+
+    Ok(())
+}
+
+pub fn pixels(config: &Config) -> PyResult<()> {
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("pixels")?
+            .into();
+        hand.call0(py)
+    })?;
+
+    Ok(())
+}
+
+pub fn shapes(config: &Config) -> PyResult<()> {
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("shapes")?
+            .into();
+        hand.call0(py)
+    })?;
+
+    Ok(())
+}
+
+pub fn temp(config: &Config) -> PyResult<()> {
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("temp")?
+            .into();
+        hand.call0(py)
     })?;
 
     Ok(())
