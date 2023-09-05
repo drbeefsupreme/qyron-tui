@@ -14,12 +14,27 @@ impl Config {
 
 //TODO: return an error if fail to connect
 pub fn connect(config: &Config) -> PyResult<()> {
-    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("connect")?
             .into();
         hand.call0(py)
-    })?;
+    });
+
+    println!("connect: {:?}", a);
+
+    Ok(())
+}
+
+pub fn nextGif(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("nextGif")?
+            .into();
+        hand.call0(py)
+    });
+
+    println!("nextGif: {:?}", a);
 
     Ok(())
 }

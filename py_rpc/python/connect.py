@@ -39,3 +39,6 @@ def pixels():
 
 def shapes():
     interface.drawRandomShapes()
+
+def nextGif():
+    interface.nextGif()
