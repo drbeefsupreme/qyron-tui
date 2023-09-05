@@ -40,23 +40,26 @@ pub fn nextGif(config: &Config) -> PyResult<()> {
 }
 
 pub fn caw(config: &Config) -> PyResult<()> {
-    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("caw")?
             .into();
         hand.call0(py)
     })?;
+    println!("caw: {:?}", a);
 
     Ok(())
 }
 
 pub fn dopamine(config: &Config) -> PyResult<()> {
-    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("dopamine")?
             .into();
         hand.call0(py)
     })?;
+
+    println!("dopamine: {:?}", a);
 
     Ok(())
 }
