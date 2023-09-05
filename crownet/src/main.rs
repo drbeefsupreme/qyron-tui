@@ -1,12 +1,14 @@
 use py_rpc;
-use notcurses::*;
+//use notcurses::*;
 use notcurses::sys::{widgets::*, *};
 
 use crownet::Command;
 
 fn main() -> NcResult<()> {
     let rpc_config = py_rpc::Config::new();
-    py_rpc::connect(&rpc_config);
+    let a = py_rpc::connect(&rpc_config);
+
+    println!("connect: {:?}", a);
 
     let nc: &mut Nc = unsafe { Nc::new()? };
     //TODO why do I have to use NcPlane instead of Plane?

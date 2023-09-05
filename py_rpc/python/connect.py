@@ -24,8 +24,6 @@ def connect():
 
     time.sleep(1)
 
-    test()
-
 def caw():
     interface.scrollingLayer1_start(b'CAWCAWCAW', -1)
 
