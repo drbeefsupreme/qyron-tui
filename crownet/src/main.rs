@@ -24,7 +24,9 @@ fn main() -> NcResult<()> {
         .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
         .item("Random pixels", "asdfasdhfkalshdg")
         .item("Random shapes", "yes")
+        .item("Random shapes BG", "YES")
         .item("Next gif", "bweh")
+        .item("No gif", "bye")
 //        .item("Temperature", "DEBUG: CPU temp")
         .title("CrowNet")
         .secondary("Institute for Advanced Levels")
@@ -58,6 +60,8 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
         Command::RandomShapes => py_rpc::shapes(&rpc_config),
         Command::Temperature => py_rpc::temp(&rpc_config),
         Command::NextGif     => py_rpc::nextGif(&rpc_config),
+        Command::NoGif       => py_rpc::noGif(&rpc_config),
+        Command::RandomShapesBG => py_rpc::shapesBg(&rpc_config),
         _ => Ok(()),
     };
 }

@@ -42,3 +42,9 @@ def shapes():
 
 def nextGif():
     interface.nextGif()
+
+def noGif():
+    interface.noGif()
+
+def hitShapes():
+    interface.hitShapes()

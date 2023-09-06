@@ -39,6 +39,19 @@ pub fn nextGif(config: &Config) -> PyResult<()> {
     Ok(())
 }
 
+pub fn noGif(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("noGif")?
+            .into();
+        hand.call0(py)
+    });
+
+    println!("noGif: {:?}", a);
+
+    Ok(())
+}
+
 pub fn caw(config: &Config) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
@@ -96,6 +109,21 @@ pub fn shapes(config: &Config) -> PyResult<()> {
 
     Ok(())
 }
+
+pub fn shapesBg(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("hitShapes")?
+            .into();
+        hand.call0(py)
+    });
+
+    println!("shapesBg: {:?}", a);
+
+    Ok(())
+}
+
+
 
 pub fn temp(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
