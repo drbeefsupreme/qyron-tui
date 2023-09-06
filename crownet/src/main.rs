@@ -15,8 +15,8 @@ fn main() -> NcResult<()> {
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
     stdplane.set_fg_rgb(0x40f040);
 
-    let planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80);
-    let selplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts)?;
+    let sel_planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80);
+    let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &sel_planeopts)?;
 
     let selector = NcSelector::builder()
         .item("Clear", "clears the chyron")
@@ -38,9 +38,36 @@ fn main() -> NcResult<()> {
         )
         .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
-        .finish(selplane)?;
+        .finish(sel_plane)?;
 
-    run_selector(nc, selector, &rpc_config)?;
+    //TODO selector for gifs
+    //TODO text box to input text to particular layers
+    //TODO secondary selector for layer selection
+
+    //TODO figure out how to display an image
+    if !nc.canpixel() {
+        unsafe { nc.stop()? };
+        return Err(NcError::with_msg(
+            1,
+            "Error: pixel graphics support required",
+        ));
+    }
+
+    //TODO make this alterable
+    let filepath = String::from("/home/chyron/images/bob.png");
+    let visual: &mut NcVisual = NcVisual::from_file(&filepath)?;
+    let pix_planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Right, 128, 96);
+    let pix_plane: &mut NcPlane = NcPlane::new_child(stdplane, &pix_planeopts)?;
+
+    let bweh: NcVisualOptions = NcVisualOptions::builder()
+        .plane(pix_plane)
+        .scale(NcScale::Scale)
+        .pixel()
+        .build();
+
+    unsafe { visual.blit(nc, Some(&bweh))? };
+
+    main_loop(nc, selector, &rpc_config)?;
 
     selector.destroy()?;
 
@@ -62,7 +89,7 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
     };
 }
 
-fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config) -> NcResult<Command> {
+fn main_loop(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config) -> NcResult<Command> {
     let mut ni: NcInput = NcInput::new_empty();
 
     // do not wait for input before first rendering
