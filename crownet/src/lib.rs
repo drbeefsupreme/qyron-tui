@@ -12,6 +12,7 @@ pub enum Command {
     Quit,
     NextGif,
     NoGif,
+    Text,
 }
 
 impl Command {

@@ -22,9 +22,9 @@ fn main() -> NcResult<()> {
 
     let reader_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(10, NcAlign::Center, 150, 80);
     let reader_plane: &mut NcPlane = NcPlane::new_child(stdplane, &reader_opts)?;
-    let reader = NcReader::new(reader_plane)?;
+    let mut reader = NcReader::new(reader_plane)?;
 
-    let selector = NcSelector::builder()
+    let mut selector= NcSelector::builder()
         .item("Clear", "clears the chyron")
         .item("CAW", "CAW CAW CAW CAW CAW")
         .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
@@ -49,20 +49,19 @@ fn main() -> NcResult<()> {
         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
         .finish(sel_plane)?;
 
+    text_box(nc, &rpc_config, &mut reader, &mut selector);
+
+    unsafe { nc.stop()? };
+
+    Ok(())
+}
+
+fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader, selector: &mut NcSelector) -> NcResult<Command> {
     let mut ni: NcInput = NcInput::new_empty();
     let mut bweh: bool = true;
     loop {
-        let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
-        match keypress {
-            NcReceived::Key(ev) => match ev {
-                NcKey::LCtrl => {
-                     bweh = !bweh
-                },
-                _ => (),
-             },
-            _ => (),
-        }
         if bweh {
+            let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
             match keypress {
                NcReceived::Char(ch) => {
                    match ch {
@@ -77,34 +76,33 @@ fn main() -> NcResult<()> {
                    }
                },
                NcReceived::Key(ev) => match ev {
-                       NcKey::Enter => {
-                           let contents = unsafe { ncreader_contents(reader as *mut ncreader) };
-                           let cstr_contents = unsafe { CStr::from_ptr(contents) };
-                           let contents_string = cstr_contents.to_str().unwrap().to_owned();
-                           send_text(&rpc_config, contents_string);
-                       },
+                   NcKey::Enter => {
+                       let contents = unsafe { ncreader_contents(reader as *mut ncreader) };
+                       let cstr_contents = unsafe { CStr::from_ptr(contents) };
+                       let contents_string = cstr_contents.to_str().unwrap().to_owned();
+                       send_text(&rpc_config, contents_string);
+                   },
+                   NcKey::Home => {
+                       bweh = !bweh
+                   },
                    _ => (),
                },
             _ => (),
            }
         } else {
-            run_selector(nc, selector, &rpc_config)?;
+            run_selector(nc, selector, &rpc_config, bweh, reader)?;
         }
         nc.render()?;
     }
+}
 //     selector.destroy()?;
 //    reader.destroy()?;
-
-    unsafe { nc.stop()? };
-
-    Ok(())
-}
 
 fn send_text(rpc_config: &py_rpc::Config, text: String) {
     py_rpc::text(&rpc_config, text);
 }
 
-fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
+fn send_choice(choice: Command, rpc_config: &py_rpc::Config, nc: &mut Nc) {
     match choice {
         Command::Clear => py_rpc::clear(&rpc_config),
         Command::Caw => py_rpc::caw(&rpc_config),
@@ -116,17 +114,22 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
         Command::NoGif       => py_rpc::noGif(&rpc_config),
         Command::RandomShapesBG => py_rpc::shapesBg(&rpc_config),
         Command::RandomPixelsBG => py_rpc::pixelsBg(&rpc_config),
+        Command::Text => Ok(()),
         _ => Ok(()),
     };
 }
 
-fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config) -> NcResult<Command> {
+fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config, mut bweh: bool,
+reader: &mut NcReader) -> NcResult<Command> {
     let mut ni: NcInput = NcInput::new_empty();
 
     // do not wait for input before first rendering
     nc.render()?;
 
     loop {
+        if !bweh {
+            return Ok(Command::Text)
+        }
         let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
 
         if !selector.offer_input(ni) {
@@ -156,7 +159,10 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Con
                 NcReceived::Key(ev) => match ev {
                     NcKey::Enter => {
                         let choice = selector.selected().ok_or_else(|| NcError::new())?;
-                        send_choice(Command::from_str(&choice), &rpc_config);
+                        send_choice(Command::from_str(&choice), &rpc_config, nc);
+                    },
+                    NcKey::Home => {
+                        bweh = !bweh;
                     },
                     _ => (),
                 },
@@ -166,4 +172,8 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Con
 
         nc.render()?;
     }
+    if !bweh {
+        text_box(nc, &rpc_config, reader, selector);
+//        send_choice(Command::Text, &rpc_config, nc, reader);
+    };
 }
