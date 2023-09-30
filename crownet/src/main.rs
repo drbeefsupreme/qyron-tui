@@ -17,78 +17,81 @@ fn main() -> NcResult<()> {
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
     stdplane.set_fg_rgb(0x40f040);
 
-    // let plane_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80// );
-//     // let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &plane_opts)?;
+    let plane_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::Left, 15, 80);
+    let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &plane_opts)?;
 
-    let reader_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80);
+    let reader_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(10, NcAlign::Center, 150, 80);
     let reader_plane: &mut NcPlane = NcPlane::new_child(stdplane, &reader_opts)?;
     let reader = NcReader::new(reader_plane)?;
 
+    let selector = NcSelector::builder()
+        .item("Clear", "clears the chyron")
+        .item("CAW", "CAW CAW CAW CAW CAW")
+        .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
+        .item("Random pixels", "asdfasdhfkalshdg")
+        .item("Random pixels BG", "skrrt")
+        .item("Random shapes", "yes")
+        .item("Random shapes BG", "YES")
+        .item("Next gif", "bweh")
+        .item("No gif", "bye")
+//        .item("Temperature", "DEBUG: CPU temp")
+        .title("CrowNet")
+        .secondary("Institute for Advanced Levels")
+        .footer("The Too Late Show with Dr. Beelzebub Crow")
+        .max_display(4)
+        .default_item(1)
+        .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
+        .item_channels(
+            NcChannels::from_rgb(0xe08040, 0),
+            NcChannels::from_rgb(0x80e040, 0),
+        )
+        .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
+        .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
+        .finish(sel_plane)?;
+
     let mut ni: NcInput = NcInput::new_empty();
+    let mut bweh: bool = true;
     loop {
         let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
-
-        let mut num_chars: u64 = 0;
-
         match keypress {
-            NcReceived::Char(ch) => {
-                match ch {
-                    a => {
-                        let mut vec = Vec::<u8>::new();
-                        vec.push(a as u8);
-                        num_chars += 1;
-                        let print_this = unsafe { CString::from_vec_unchecked(vec) };
-                        unsafe {
-                            ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr() as *const u8);
-                        }
-                    }
-                    _ => (),
-                }
-            },
             NcReceived::Key(ev) => match ev {
-                    NcKey::Enter => {
-                        let bweh = unsafe { ncreader_contents(reader as *mut ncreader) };
-                        let skrrt = unsafe { CStr::from_ptr(bweh) };
-                        let skrrt_slice = skrrt.to_str().unwrap();
-                        let skrrt_string = skrrt_slice.to_owned();
-//                        println!("{:?}", skrrt);
-                        send_text(&rpc_config, skrrt_string);
-                    },
+                NcKey::LCtrl => {
+                     bweh = !bweh
+                },
                 _ => (),
-            },
-         _ => (),
+             },
+            _ => (),
         }
-
+        if bweh {
+            match keypress {
+               NcReceived::Char(ch) => {
+                   match ch {
+                       a => {
+                           let mut vec = Vec::<u8>::new();
+                           vec.push(a as u8);
+                           let print_this = unsafe { CString::from_vec_unchecked(vec) };
+                           unsafe {
+                               ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr() as *const u8);
+                           }
+                       }
+                   }
+               },
+               NcReceived::Key(ev) => match ev {
+                       NcKey::Enter => {
+                           let contents = unsafe { ncreader_contents(reader as *mut ncreader) };
+                           let cstr_contents = unsafe { CStr::from_ptr(contents) };
+                           let contents_string = cstr_contents.to_str().unwrap().to_owned();
+                           send_text(&rpc_config, contents_string);
+                       },
+                   _ => (),
+               },
+            _ => (),
+           }
+        } else {
+            run_selector(nc, selector, &rpc_config)?;
+        }
         nc.render()?;
     }
-
-//     let selector = NcSelector::builder()
-//         .item("Clear", "clears the chyron")
-//         .item("CAW", "CAW CAW CAW CAW CAW")
-//         .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
-//         .item("Random pixels", "asdfasdhfkalshdg")
-//         .item("Random pixels BG", "skrrt")
-//         .item("Random shapes", "yes")
-//         .item("Random shapes BG", "YES")
-//         .item("Next gif", "bweh")
-//         .item("No gif", "bye")
-// //        .item("Temperature", "DEBUG: CPU temp")
-//         .title("CrowNet")
-//         .secondary("Institute for Advanced Levels")
-//         .footer("The Too Late Show with Dr. Beelzebub Crow")
-//         .max_display(4)
-//         .default_item(1)
-//         .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
-//         .item_channels(
-//             NcChannels::from_rgb(0xe08040, 0),
-//             NcChannels::from_rgb(0x80e040, 0),
-//         )
-//         .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
-//         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
-//         .finish(sel_plane)?;
-
-//     run_selector(nc, selector, &rpc_config)?;
-
 //     selector.destroy()?;
 //    reader.destroy()?;
 
