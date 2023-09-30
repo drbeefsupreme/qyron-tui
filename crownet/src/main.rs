@@ -31,8 +31,10 @@ fn main() -> NcResult<()> {
         match keypress {
             NcReceived::Char(ch) => {
                 match ch {
-                    'c' => {
-                        let print_this = CString::new("c").unwrap();
+                    a => {
+                        let mut vec = Vec::<u8>::new();
+                        vec.push(a as u8);
+                        let print_this = unsafe { CString::from_vec_unchecked(vec) };
                         unsafe {
                             ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr() as *const u8);
                         }
