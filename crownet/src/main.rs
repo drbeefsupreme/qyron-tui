@@ -59,6 +59,7 @@ fn main() -> NcResult<()> {
 fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader, selector: &mut NcSelector) -> NcResult<Command> {
     let mut ni: NcInput = NcInput::new_empty();
     let mut bweh: bool = true;
+    println!("text_box()");
     loop {
         if bweh {
             let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
@@ -90,7 +91,9 @@ fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader, sel
             _ => (),
            }
         } else {
+            println!("run");
             run_selector(nc, selector, &rpc_config, bweh, reader)?;
+            bweh = true;
         }
         nc.render()?;
     }
@@ -123,11 +126,12 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Con
 reader: &mut NcReader) -> NcResult<Command> {
     let mut ni: NcInput = NcInput::new_empty();
 
+    println!("selector");
     // do not wait for input before first rendering
     nc.render()?;
 
     loop {
-        if !bweh {
+        if bweh {
             return Ok(Command::Text)
         }
         let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
@@ -172,8 +176,8 @@ reader: &mut NcReader) -> NcResult<Command> {
 
         nc.render()?;
     }
-    if !bweh {
-        text_box(nc, &rpc_config, reader, selector);
-//        send_choice(Command::Text, &rpc_config, nc, reader);
-    };
+//     if !bweh {
+//         text_box(nc, &rpc_config, reader, selector);
+// //        send_choice(Command::Text, &rpc_config, nc, reader);
+//     };
 }
