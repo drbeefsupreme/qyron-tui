@@ -50,7 +50,6 @@ fn main() -> NcResult<()> {
         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
         .finish(sel_plane)?;
 
-//    let mut bweh: bool = true;
     loop {
         if unsafe { bweh } {
             text_box(nc, &rpc_config, stdplane, &mut reader);
@@ -64,11 +63,9 @@ fn main() -> NcResult<()> {
     Ok(())
 }
 
-//fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, reader: &mut NcReader) -> NcResult<Command> {
 fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, reader: &mut NcReader) {
 
     let mut ni: NcInput = NcInput::new_empty();
-//    let mut bweh: bool = true;
 
     loop {
         if unsafe { bweh } {
@@ -94,11 +91,6 @@ fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, re
                        send_text(&rpc_config, contents_string);
                    },
                    NcKey::Home => {
-                       println!("skrrt");
-                       // unsafe {
-                       //     ncreader_destroy(reader, &mut ncreader_contents(reader as *mut ncreader));
-                       //     notcurses_drop_planes(nc);
-                       // }
                        unsafe { bweh = !bweh }
                        break;
                    },
@@ -108,14 +100,10 @@ fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, re
            }
         }  else {
             break;
-//             unsafe { bweh = true };
-// //            run_selector(nc, &rpc_config, stdplane)?;
         }
         nc.render();
     }
 }
-//     selector.destroy()?;
-//
 
 fn send_text(rpc_config: &py_rpc::Config, text: String) {
     py_rpc::text(&rpc_config, text);
@@ -138,18 +126,19 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config, nc: &mut Nc) {
     };
 }
 
-fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, selector: &mut NcSelector) -> NcResult<Command> {
+//fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, selector: &mut NcSelector) -> NcResult<Command> {
+fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, selector: &mut NcSelector) {
 
-      let mut ni: NcInput = NcInput::new_empty();
+    let mut ni: NcInput = NcInput::new_empty();
 
     // do not wait for input before first rendering
-    nc.render()?;
+    nc.render();
 
     loop {
         if unsafe { bweh } {
-            return Ok(Command::Text)
+            break;
         }
-        let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
+        let keypress: NcReceived = nc.get_blocking(Some(&mut ni)).unwrap();
 
         if !selector.offer_input(ni) {
             // do not consider release key: only press
@@ -162,35 +151,33 @@ fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane
                     match ch {
                         // Q => quit
                         'q' | 'Q' => {
-                            return Ok(Command::Quit);
+                            send_choice(Command::Quit, &rpc_config, nc);
                         },
                         // S => down
                         's' | 'S' => {
-                            selector.nextitem()?;
+                            selector.nextitem().unwrap();
                         },
                         // W => up
                         'w' | 'W' => {
-                            selector.previtem()?;
+                            selector.previtem().unwrap();
                         },
                         _ => (),
                     }
                 },
                 NcReceived::Key(ev) => match ev {
                     NcKey::Enter => {
-                        let choice = selector.selected().ok_or_else(|| NcError::new())?;
+                        let choice = selector.selected().ok_or_else(|| NcError::new()).unwrap();
                         send_choice(Command::from_str(&choice), &rpc_config, nc);
                     },
                     NcKey::Home => {
-                        selector.destroy();
-                        unsafe { notcurses_drop_planes(nc) };
                         unsafe { bweh = !bweh };
                     },
-                    _ => (),
+                    _ => break,
                 },
-                _ => (),
+                _ => break,
             }
         }
 
-        nc.render()?;
+        nc.render();
     }
 }
