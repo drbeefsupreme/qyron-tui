@@ -2,7 +2,7 @@ use py_rpc;
 //use notcurses::*;
 use notcurses::sys::{widgets::*, *};
 use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_destroy,
-    notcurses_drop_planes};
+    notcurses_drop_planes, ncreader_clear};
 use std::ffi::{CStr, CString};
 
 use crownet::Command;
@@ -64,8 +64,8 @@ fn main() -> NcResult<()> {
 }
 
 fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, reader: &mut NcReader) {
-
     let mut ni: NcInput = NcInput::new_empty();
+    unsafe { ncreader_clear(reader) };
 
     loop {
         if unsafe { bweh } {
