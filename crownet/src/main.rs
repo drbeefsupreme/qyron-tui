@@ -1,10 +1,13 @@
 use py_rpc;
 //use notcurses::*;
 use notcurses::sys::{widgets::*, *};
-use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents};
+use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_destroy,
+    notcurses_drop_planes};
 use std::ffi::{CStr, CString};
 
 use crownet::Command;
+
+static mut bweh: bool = true;
 
 fn main() -> NcResult<()> {
     let rpc_config = py_rpc::Config::new();
@@ -16,13 +19,12 @@ fn main() -> NcResult<()> {
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
     stdplane.set_fg_rgb(0x40f040);
 
-    let plane_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::Left, 15, 80);
-    let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &plane_opts)?;
-
     let reader_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(10, NcAlign::Center, 150, 80);
     let reader_plane: &mut NcPlane = NcPlane::new_child(stdplane, &reader_opts)?;
     let mut reader = NcReader::new(reader_plane)?;
 
+    let plane_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::Left, 15, 80);
+    let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &plane_opts)?;
     let mut selector= NcSelector::builder()
         .item("Clear", "clears the chyron")
         .item("CAW", "CAW CAW CAW CAW CAW")
@@ -48,19 +50,29 @@ fn main() -> NcResult<()> {
         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
         .finish(sel_plane)?;
 
-    text_box(nc, &rpc_config, &mut reader, &mut selector);
+//    let mut bweh: bool = true;
+    loop {
+        if unsafe { bweh } {
+            text_box(nc, &rpc_config, stdplane, &mut reader);
+        } else {
+            run_selector(nc, &rpc_config, stdplane, &mut selector);
+        }
+    }
 
     unsafe { nc.stop()? };
 
     Ok(())
 }
 
-fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader, selector: &mut NcSelector) -> NcResult<Command> {
+//fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, reader: &mut NcReader) -> NcResult<Command> {
+fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, reader: &mut NcReader) {
+
     let mut ni: NcInput = NcInput::new_empty();
-    let mut bweh: bool = true;
+//    let mut bweh: bool = true;
+
     loop {
-        if bweh {
-            let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
+        if unsafe { bweh } {
+            let keypress: NcReceived = nc.get_blocking(Some(&mut ni)).expect("keypress");
             match keypress {
                NcReceived::Char(ch) => {
                    match ch {
@@ -82,21 +94,28 @@ fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader, sel
                        send_text(&rpc_config, contents_string);
                    },
                    NcKey::Home => {
-                       bweh = !bweh
+                       println!("skrrt");
+                       // unsafe {
+                       //     ncreader_destroy(reader, &mut ncreader_contents(reader as *mut ncreader));
+                       //     notcurses_drop_planes(nc);
+                       // }
+                       unsafe { bweh = !bweh }
+                       break;
                    },
-                   _ => (),
+                   _ => break,
                },
             _ => (),
            }
-        } else {
-            run_selector(nc, selector, &rpc_config, bweh, reader)?;
-            bweh = true;
+        }  else {
+            break;
+//             unsafe { bweh = true };
+// //            run_selector(nc, &rpc_config, stdplane)?;
         }
-        nc.render()?;
+        nc.render();
     }
 }
 //     selector.destroy()?;
-//    reader.destroy()?;
+//
 
 fn send_text(rpc_config: &py_rpc::Config, text: String) {
     py_rpc::text(&rpc_config, text);
@@ -119,15 +138,15 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config, nc: &mut Nc) {
     };
 }
 
-fn run_selector(nc: &mut Nc, selector: &mut NcSelector, rpc_config: &py_rpc::Config, mut bweh: bool,
-reader: &mut NcReader) -> NcResult<Command> {
-    let mut ni: NcInput = NcInput::new_empty();
+fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, selector: &mut NcSelector) -> NcResult<Command> {
+
+      let mut ni: NcInput = NcInput::new_empty();
 
     // do not wait for input before first rendering
     nc.render()?;
 
     loop {
-        if bweh {
+        if unsafe { bweh } {
             return Ok(Command::Text)
         }
         let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
@@ -162,7 +181,9 @@ reader: &mut NcReader) -> NcResult<Command> {
                         send_choice(Command::from_str(&choice), &rpc_config, nc);
                     },
                     NcKey::Home => {
-                        bweh = !bweh;
+                        selector.destroy();
+                        unsafe { notcurses_drop_planes(nc) };
+                        unsafe { bweh = !bweh };
                     },
                     _ => (),
                 },
