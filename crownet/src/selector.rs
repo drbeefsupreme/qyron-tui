@@ -1,11 +1,9 @@
 use py_rpc;
 use notcurses::sys::{widgets::*, *};
-use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_destroy,
-    notcurses_drop_planes, ncreader_clear};
 
-use crate::{Command, Planes, CurrentPlane};
+use crate::{Command, CurrentPlane};
 
-pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, selector: &mut NcSelector,
+pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, selector: &mut NcSelector,
     current_plane: &mut CurrentPlane) {
     let mut ni: NcInput = NcInput::new_empty();
 
@@ -28,7 +26,7 @@ pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcP
                             match ch {
                                 // Q => quit
                                 'q' | 'Q' => {
-                                    send_choice(Command::Quit, &rpc_config, nc);
+                                    send_choice(Command::Quit, &rpc_config);
                                 },
                                 // S => down
                                 's' | 'S' => {
@@ -44,7 +42,7 @@ pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcP
                         NcReceived::Key(ev) => match ev {
                             NcKey::Enter => {
                                 let choice = selector.selected().ok_or_else(|| NcError::new()).unwrap();
-                                send_choice(Command::from_str(&choice), &rpc_config, nc);
+                                send_choice(Command::from_str(&choice), &rpc_config);
                             },
                             NcKey::Home => {
                                 *current_plane = CurrentPlane::TextBox;
@@ -62,7 +60,7 @@ pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcP
     }
 }
 
-fn send_choice(choice: Command, rpc_config: &py_rpc::Config, nc: &mut Nc) {
+fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
     match choice {
         Command::Clear => py_rpc::clear(&rpc_config),
         Command::Caw => py_rpc::caw(&rpc_config),

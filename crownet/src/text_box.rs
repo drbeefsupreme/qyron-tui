@@ -1,12 +1,11 @@
 use py_rpc;
 use notcurses::sys::{widgets::*, *};
-use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_destroy,
-    notcurses_drop_planes, ncreader_clear};
+use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_clear};
 use std::ffi::{CStr, CString};
-use crate::{CurrentPlane, Planes};
+use crate::CurrentPlane;
 
 //TODO make a selector for which layer to write on
-pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, stdplane: &mut NcPlane, reader: &mut NcReader,
+pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader,
     current_plane: &mut CurrentPlane) {
     let mut ni: NcInput = NcInput::new_empty();
     unsafe { ncreader_clear(reader) };

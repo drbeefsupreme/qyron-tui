@@ -1,12 +1,7 @@
 pub mod text_box;
 pub mod selector;
 
-use py_rpc;
-//use notcurses::*;
 use notcurses::sys::{widgets::*, *};
-use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_destroy,
-    notcurses_drop_planes, ncreader_clear};
-//use std::ffi::{cstr, cstring};
 
 //  commands to send to LED matrix
 pub enum Command {
@@ -58,11 +53,11 @@ impl Planes<'_> {
         let reader_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(10, NcAlign::Center, 150, 80);
         let reader_plane: &mut NcPlane = NcPlane::new_child(stdplane, &reader_opts).unwrap();
         reader_plane.set_bg_rgb(0x40f040); //TODO is this doing anything?
-        let mut reader = NcReader::new(reader_plane).unwrap();
+        let reader = NcReader::new(reader_plane).unwrap();
 
         let plane_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::Left, 15, 80);
         let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &plane_opts).unwrap();
-        let mut selector = NcSelector::builder()
+        let selector = NcSelector::builder()
             .item("Clear", "clears the chyron")
             .item("CAW", "CAW CAW CAW CAW CAW")
             .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")

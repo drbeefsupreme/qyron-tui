@@ -1,11 +1,7 @@
 use py_rpc;
-use notcurses::sys::{widgets::*, *};
-use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_destroy,
-    notcurses_drop_planes, ncreader_clear};
-use std::ffi::{CStr, CString};
+use notcurses::sys::*;
 
-use crownet::{Command, Planes, CurrentPlane};
-
+use crownet::{Planes, CurrentPlane};
 use crownet::text_box::*;
 use crownet::selector::*;
 
@@ -26,32 +22,15 @@ fn main() -> NcResult<()> {
     loop {
         match current_plane {
             CurrentPlane::TextBox => {
-                text_box(nc, &rpc_config, stdplane, planes.reader, &mut current_plane);
+                text_box(nc, &rpc_config, planes.reader, &mut current_plane);
             },
             CurrentPlane::Selector => {
-                run_selector(nc, &rpc_config, stdplane, planes.selector, &mut current_plane);
+                run_selector(nc, &rpc_config, planes.selector, &mut current_plane);
             }
         }
     }
 
-    unsafe { nc.stop()? };
+//    unsafe { nc.stop()? };
 
-    Ok(())
-}
-
-fn send_choice(choice: Command, rpc_config: &py_rpc::Config, nc: &mut Nc) {
-    match choice {
-        Command::Clear => py_rpc::clear(&rpc_config),
-        Command::Caw => py_rpc::caw(&rpc_config),
-        Command::Dopamine => py_rpc::dopamine(&rpc_config),
-        Command::RandomPixels => py_rpc::pixels(&rpc_config),
-        Command::RandomShapes => py_rpc::shapes(&rpc_config),
-        Command::Temperature => py_rpc::temp(&rpc_config),
-        Command::NextGif     => py_rpc::nextGif(&rpc_config),
-        Command::NoGif       => py_rpc::noGif(&rpc_config),
-        Command::RandomShapesBG => py_rpc::shapesBg(&rpc_config),
-        Command::RandomPixelsBG => py_rpc::pixelsBg(&rpc_config),
-        Command::Text => Ok(()),
-        _ => Ok(()),
-    };
+//    Ok(())
 }
