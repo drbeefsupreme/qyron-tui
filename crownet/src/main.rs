@@ -24,11 +24,28 @@ fn main() -> NcResult<()> {
     let reader_plane: &mut NcPlane = NcPlane::new_child(stdplane, &reader_opts)?;
     let reader = NcReader::new(reader_plane)?;
 
-    let c_str = CString::new("c").unwrap();
+    let mut ni: NcInput = NcInput::new_empty();
     loop {
-        unsafe {
-            ncreader_write_egc(reader as *mut ncreader, c_str.as_ptr() as *const u8);
+        let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
+
+        match keypress {
+            NcReceived::Char(ch) => {
+                match ch {
+                    'c' => {
+                        let print_this = CString::new("c").unwrap();
+                        unsafe {
+                            ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr() as *const u8);
+                        }
+                    }
+                    _ => (),
+                }
+            },
+            NcReceived::Key(ev) => match ev {
+                _ => (),
+            },
+         _ => (),
         }
+
         nc.render()?;
     }
 
