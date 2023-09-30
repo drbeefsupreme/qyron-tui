@@ -99,6 +99,17 @@ pub fn pixels(config: &Config) -> PyResult<()> {
     Ok(())
 }
 
+pub fn pixelsBg(config: &Config) -> PyResult<()> {
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("hitPixels")?
+            .into();
+        hand.call0(py)
+    })?;
+
+    Ok(())
+}
+
 pub fn shapes(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?

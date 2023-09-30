@@ -48,3 +48,6 @@ def noGif():
 
 def hitShapes():
     interface.hitShapes()
+
+def hitPixels():
+    interface.hitShapes()

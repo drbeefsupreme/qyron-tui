@@ -1,6 +1,8 @@
 use py_rpc;
 //use notcurses::*;
 use notcurses::sys::{widgets::*, *};
+use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc};
+use std::ffi::CString;
 
 use crownet::Command;
 
@@ -15,36 +17,50 @@ fn main() -> NcResult<()> {
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
     stdplane.set_fg_rgb(0x40f040);
 
-    let planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80);
-    let selplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts)?;
+    // let plane_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80// );
+//     // let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &plane_opts)?;
 
-    let selector = NcSelector::builder()
-        .item("Clear", "clears the chyron")
-        .item("CAW", "CAW CAW CAW CAW CAW")
-        .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
-        .item("Random pixels", "asdfasdhfkalshdg")
-        .item("Random shapes", "yes")
-        .item("Random shapes BG", "YES")
-        .item("Next gif", "bweh")
-        .item("No gif", "bye")
-//        .item("Temperature", "DEBUG: CPU temp")
-        .title("CrowNet")
-        .secondary("Institute for Advanced Levels")
-        .footer("The Too Late Show with Dr. Beelzebub Crow")
-        .max_display(4)
-        .default_item(1)
-        .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
-        .item_channels(
-            NcChannels::from_rgb(0xe08040, 0),
-            NcChannels::from_rgb(0x80e040, 0),
-        )
-        .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
-        .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
-        .finish(selplane)?;
+    let reader_opts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80);
+    let reader_plane: &mut NcPlane = NcPlane::new_child(stdplane, &reader_opts)?;
+    let reader = NcReader::new(reader_plane)?;
 
-    run_selector(nc, selector, &rpc_config)?;
+    let c_str = CString::new("c").unwrap();
+    loop {
+        unsafe {
+            ncreader_write_egc(reader as *mut ncreader, c_str.as_ptr() as *const u8);
+        }
+        nc.render()?;
+    }
 
-    selector.destroy()?;
+//     let selector = NcSelector::builder()
+//         .item("Clear", "clears the chyron")
+//         .item("CAW", "CAW CAW CAW CAW CAW")
+//         .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
+//         .item("Random pixels", "asdfasdhfkalshdg")
+//         .item("Random pixels BG", "skrrt")
+//         .item("Random shapes", "yes")
+//         .item("Random shapes BG", "YES")
+//         .item("Next gif", "bweh")
+//         .item("No gif", "bye")
+// //        .item("Temperature", "DEBUG: CPU temp")
+//         .title("CrowNet")
+//         .secondary("Institute for Advanced Levels")
+//         .footer("The Too Late Show with Dr. Beelzebub Crow")
+//         .max_display(4)
+//         .default_item(1)
+//         .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
+//         .item_channels(
+//             NcChannels::from_rgb(0xe08040, 0),
+//             NcChannels::from_rgb(0x80e040, 0),
+//         )
+//         .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
+//         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
+//         .finish(sel_plane)?;
+
+//     run_selector(nc, selector, &rpc_config)?;
+
+//     selector.destroy()?;
+//    reader.destroy()?;
 
     unsafe { nc.stop()? };
 
@@ -62,6 +78,7 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
         Command::NextGif     => py_rpc::nextGif(&rpc_config),
         Command::NoGif       => py_rpc::noGif(&rpc_config),
         Command::RandomShapesBG => py_rpc::shapesBg(&rpc_config),
+        Command::RandomPixelsBG => py_rpc::pixelsBg(&rpc_config),
         _ => Ok(()),
     };
 }

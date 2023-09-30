@@ -4,6 +4,7 @@ pub enum Command {
     Caw,
     Dopamine,
     RandomPixels,
+    RandomPixelsBG,
     RandomShapes,
     RandomShapesBG,
     Temperature,
@@ -25,6 +26,7 @@ impl Command {
             "Next gif"      => Command::NextGif,
             "No gif"        => Command::NoGif,
             "Random shapes BG" => Command::RandomShapesBG,
+            "Random pixels BG" => Command::RandomShapesBG,
             _               => Command::Invalid,
         }
     }

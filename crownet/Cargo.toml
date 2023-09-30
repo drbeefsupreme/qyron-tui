@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 # notcurses = "3.2.3"
 notcurses = { path = "../../notcurses-rs" }
+libnotcurses-sys = { path = "../../libnotcurses-sys" }
 py_rpc = { path = "../py_rpc" }
