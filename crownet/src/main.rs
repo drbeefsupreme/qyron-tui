@@ -1,8 +1,8 @@
 use py_rpc;
 //use notcurses::*;
 use notcurses::sys::{widgets::*, *};
-use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc};
-use std::ffi::CString;
+use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents};
+use std::ffi::{CStr, CString};
 
 use crownet::Command;
 
@@ -28,12 +28,15 @@ fn main() -> NcResult<()> {
     loop {
         let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
 
+        let mut num_chars: u64 = 0;
+
         match keypress {
             NcReceived::Char(ch) => {
                 match ch {
                     a => {
                         let mut vec = Vec::<u8>::new();
                         vec.push(a as u8);
+                        num_chars += 1;
                         let print_this = unsafe { CString::from_vec_unchecked(vec) };
                         unsafe {
                             ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr() as *const u8);
@@ -43,6 +46,11 @@ fn main() -> NcResult<()> {
                 }
             },
             NcReceived::Key(ev) => match ev {
+                    NcKey::Enter => {
+                        let bweh = unsafe { ncreader_contents(reader as *mut ncreader) };
+                        let skrrt = unsafe { CStr::from_ptr(bweh) };
+                        println!("{:?}", skrrt);
+                    },
                 _ => (),
             },
          _ => (),
