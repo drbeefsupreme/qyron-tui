@@ -1,5 +1,5 @@
 use pyo3::prelude::*;
-//use pyo3::types::PyTuple;
+use pyo3::types::PyTuple;
 
 pub struct Config {
     pub file: &'static str
@@ -60,6 +60,20 @@ pub fn caw(config: &Config) -> PyResult<()> {
         hand.call0(py)
     })?;
     println!("caw: {:?}", a);
+
+    Ok(())
+}
+
+pub fn text(config: &Config, text: String) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[text.as_bytes()]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("text")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    println!("text: {:?}", a);
 
     Ok(())
 }

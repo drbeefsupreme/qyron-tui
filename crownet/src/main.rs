@@ -49,7 +49,10 @@ fn main() -> NcResult<()> {
                     NcKey::Enter => {
                         let bweh = unsafe { ncreader_contents(reader as *mut ncreader) };
                         let skrrt = unsafe { CStr::from_ptr(bweh) };
-                        println!("{:?}", skrrt);
+                        let skrrt_slice = skrrt.to_str().unwrap();
+                        let skrrt_string = skrrt_slice.to_owned();
+//                        println!("{:?}", skrrt);
+                        send_text(&rpc_config, skrrt_string);
                     },
                 _ => (),
             },
@@ -92,6 +95,10 @@ fn main() -> NcResult<()> {
     unsafe { nc.stop()? };
 
     Ok(())
+}
+
+fn send_text(rpc_config: &py_rpc::Config, text: String) {
+    py_rpc::text(&rpc_config, text);
 }
 
 fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {

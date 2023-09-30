@@ -27,6 +27,9 @@ def connect():
 def caw():
     interface.scrollingLayer1_start(b'CAWCAWCAW', -1)
 
+def text(text):
+    interface.scrollingLayer1_start(bytes(text), -1)
+
 def dopamine():
     interface.scrollingLayer2_start(b'DOPAMINE DOPAMINE DOPAMINE', -1)
 
