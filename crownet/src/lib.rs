@@ -1,11 +1,12 @@
 pub mod text_box;
+pub mod selector;
 
 use py_rpc;
 //use notcurses::*;
 use notcurses::sys::{widgets::*, *};
 use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_destroy,
     notcurses_drop_planes, ncreader_clear};
-use std::ffi::{CStr, CString};
+//use std::ffi::{cstr, cstring};
 
 //  commands to send to LED matrix
 pub enum Command {
