@@ -117,10 +117,10 @@ pub fn run_layer_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, selector: &m
 fn send_text(layer: LayerCommand, text: String, rpc_config: &py_rpc::Config) {
     match layer {
         LayerCommand::Layer1 => py_rpc::text1(&rpc_config, text),
-        LayerCommand::Layer2 => py_rpc::text1(&rpc_config, text),
-        LayerCommand::Layer3 => py_rpc::text1(&rpc_config, text),
-        LayerCommand::Layer4 => py_rpc::text1(&rpc_config, text),
-        LayerCommand::Layer5 => py_rpc::text1(&rpc_config, text),
+        LayerCommand::Layer2 => py_rpc::text2(&rpc_config, text),
+        LayerCommand::Layer3 => py_rpc::text3(&rpc_config, text),
+        LayerCommand::Layer4 => py_rpc::text4(&rpc_config, text),
+        LayerCommand::Layer5 => py_rpc::text5(&rpc_config, text),
         _ => Ok(()),
     };
 }
