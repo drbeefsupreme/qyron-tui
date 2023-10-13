@@ -68,6 +68,61 @@ pub fn text(config: &Config, text: String) -> PyResult<()> {
 
     Ok(())
 }
+pub fn text1(config: &Config, text: String) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[text.as_bytes()]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("text1")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
+pub fn text2(config: &Config, text: String) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[text.as_bytes()]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("text2")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
+pub fn text3(config: &Config, text: String) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[text.as_bytes()]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("text3")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
+pub fn text4(config: &Config, text: String) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[text.as_bytes()]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("text4")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
+pub fn text5(config: &Config, text: String) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[text.as_bytes()]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("text5")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
 
 pub fn dopamine(config: &Config) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {

@@ -22,11 +22,12 @@ fn main() -> NcResult<()> {
     loop {
         match current_plane {
             CurrentPlane::TextBox => {
-                text_box(nc, &rpc_config, planes.reader, &mut current_plane);
+                text_box(nc, &rpc_config, planes.reader, planes.text_layer_selector, &mut current_plane);
             },
             CurrentPlane::Selector => {
                 run_selector(nc, &rpc_config, planes.selector, &mut current_plane);
-            }
+            },
+            _ => (),
         }
     }
 
