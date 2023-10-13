@@ -27,9 +27,6 @@ def connect():
 def caw():
     interface.scrollingLayer1_start(b'CAWCAWCAW', -1)
 
-def text(text):
-    interface.scrollingLayer1_start(bytes(text), -1)
-
 def text1(text):
     interface.scrollingLayer1_start(bytes(text), -1)
 def text2(text):

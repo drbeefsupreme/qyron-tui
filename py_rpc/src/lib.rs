@@ -57,17 +57,6 @@ pub fn caw(config: &Config) -> PyResult<()> {
     Ok(())
 }
 
-pub fn text(config: &Config, text: String) -> PyResult<()> {
-    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-        let args = PyTuple::new(py, &[text.as_bytes()]);
-        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
-            .getattr("text")?
-            .into();
-        hand.call1(py, args)
-    })?;
-
-    Ok(())
-}
 pub fn text1(config: &Config, text: String) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let args = PyTuple::new(py, &[text.as_bytes()]);
