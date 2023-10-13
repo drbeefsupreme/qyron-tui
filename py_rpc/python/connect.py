@@ -47,6 +47,9 @@ def dopamine():
 def clear():
     interface.scrollingLayer1_start(b'', -1)
     interface.scrollingLayer2_start(b'', -1)
+    interface.scrollingLayer3_start(b'', -1)
+    interface.scrollingLayer4_start(b'', -1)
+    interface.scrollingLayer5_start(b'', -1)
 
 def pixels():
     interface.drawRandomPixels()
