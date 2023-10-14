@@ -3,6 +3,7 @@ use notcurses::sys::{widgets::*, *};
 use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_clear};
 use std::ffi::{CStr, CString};
 use std::str::FromStr;
+use std::borrow::BorrowMut;
 use crate::CurrentPlane;
 use crate::LayerCommand;
 
@@ -13,6 +14,7 @@ pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader,
 {
     let mut ni: NcInput = NcInput::new_empty();
     unsafe { ncreader_clear(reader) };
+    let mut text_vec = Vec::<u8>::new();
 
     loop {
         match current_plane {
@@ -22,9 +24,8 @@ pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader,
                    NcReceived::Char(ch) => {
                        match ch {
                            a => {
-                               let mut vec = Vec::<u8>::new();
-                               vec.push(a as u8);
-                               let print_this = unsafe { CString::from_vec_unchecked(vec) };
+                               text_vec.push(a as u8);
+                               let print_this = unsafe { CString::from_vec_unchecked(vec![a as u8]) };
                                unsafe {
                                    ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr() as *const u8);
                                }
@@ -33,11 +34,13 @@ pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader,
                    },
                    NcReceived::Key(ev) => match ev {
                        NcKey::Enter => {
-                           let contents = unsafe { ncreader_contents(reader as *mut ncreader) };
-                           let cstr_contents = unsafe { CStr::from_ptr(contents) };
-                           let contents_string = cstr_contents.to_str().unwrap().to_owned();
+                           // let contents = unsafe { ncreader_contents(reader as *mut ncreader) };
+                           // let cstr_contents = unsafe { CStr::from_ptr(contents) };
+                           // let contents_string = cstr_contents.to_str().unwrap().to_owned();
+                           let contents_string = String::from_utf8(text_vec).unwrap();
                            let layer = run_layer_selector(nc, rpc_config, selector);
                            send_text(layer, contents_string, &rpc_config);
+                           text_vec = Vec::<u8>::new();
                        },
                        NcKey::Home => {
                            *current_plane = CurrentPlane::Selector;

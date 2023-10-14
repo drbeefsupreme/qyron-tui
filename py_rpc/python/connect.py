@@ -47,6 +47,15 @@ def clear():
     interface.scrollingLayer3_start(b'', -1)
     interface.scrollingLayer4_start(b'', -1)
     interface.scrollingLayer5_start(b'', -1)
+    interface.noGif()
+    interface.clearLoops()
+    interface.disableGifsLoop()
+
+def enableGifsLoop():
+    interface.enableGifsLoop()
+
+def disableGifsLoop():
+    interface.disableGifsLoop()
 
 def pixels():
     interface.drawRandomPixels()

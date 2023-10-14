@@ -46,6 +46,28 @@ pub fn noGif(config: &Config) -> PyResult<()> {
     Ok(())
 }
 
+pub fn enableGifsLoop(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("enableGifsLoop")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+
+pub fn disableGifsLoop(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("disableGifsLoop")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+
 pub fn caw(config: &Config) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?

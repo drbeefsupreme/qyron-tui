@@ -72,6 +72,8 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
         Command::Temperature => py_rpc::temp(&rpc_config),
         Command::NextGif     => py_rpc::nextGif(&rpc_config),
         Command::NoGif       => py_rpc::noGif(&rpc_config),
+        Command::EnableGifsLoop => py_rpc::enableGifsLoop(&rpc_config),
+        Command::DisableGifsLoop => py_rpc::disableGifsLoop(&rpc_config),
         Command::RandomShapesBG => py_rpc::shapesBg(&rpc_config),
         Command::RandomPixelsBG => py_rpc::pixelsBg(&rpc_config),
         Command::Text => Ok(()),

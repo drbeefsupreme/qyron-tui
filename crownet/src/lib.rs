@@ -20,6 +20,8 @@ pub enum Command {
     Quit,
     NextGif,
     NoGif,
+    EnableGifsLoop,
+    DisableGifsLoop,
     Text,
 }
 
@@ -82,6 +84,8 @@ impl Planes<'_> {
             .item("RandomShapesBG", "YES")
             .item("NextGif", "bweh")
             .item("NoGif", "bye")
+            .item("EnableGifsLoop", "cycle")
+            .item("DisableGifsLoop", "nocycle")
     //        .item("Temperature", "DEBUG: CPU temp")
             .title("CrowNet")
             .secondary("Institute for Advanced Levels")
