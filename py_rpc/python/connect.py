@@ -2,7 +2,7 @@
 
 #RPC library
 from simple_rpc import Interface
-import time, os
+import time, os, random
 
 VERBOSE = True
 SERIAL_PORT = '/dev/ttyACM0'
@@ -25,7 +25,17 @@ def connect():
     time.sleep(1)
 
 def caw():
-    interface.scrollingLayer1_start(b'CAWCAWCAW', -1)
+    interface.scrollingLayer1_speed(random.randrange(1, 100))
+    interface.scrollingLayer2_speed(random.randrange(1, 100))
+    interface.scrollingLayer3_speed(random.randrange(1, 100))
+    interface.scrollingLayer4_speed(random.randrange(1, 100))
+    interface.scrollingLayer5_speed(random.randrange(1, 100))
+
+    interface.scrollingLayer1_start(b'CAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAW', -1)
+    interface.scrollingLayer2_start(b'CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW', -1)
+    interface.scrollingLayer3_start(b'CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW CAW', -1)
+    interface.scrollingLayer4_start(b'CAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAWCAW', -1)
+    interface.scrollingLayer5_start(b'CAW', -1)
 
 def text1(text):
     interface.scrollingLayer1_start(bytes(text), -1)
@@ -48,9 +58,18 @@ def text5(text):
 def speed5(speed):
     interface.scrollingLayer5_speed(speed)
 
-
 def dopamine():
-    interface.scrollingLayer2_start(b'DOPAMINE DOPAMINE DOPAMINE', -1)
+    interface.scrollingLayer1_speed(random.randrange(1, 100))
+    interface.scrollingLayer2_speed(random.randrange(1, 100))
+    interface.scrollingLayer3_speed(random.randrange(1, 100))
+    interface.scrollingLayer4_speed(random.randrange(1, 100))
+    interface.scrollingLayer5_speed(random.randrange(1, 100))
+
+    interface.scrollingLayer1_start(b'DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE ', -1)
+    interface.scrollingLayer2_start(b'DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE', -1)
+    interface.scrollingLayer3_start(b'DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE', -1)
+    interface.scrollingLayer4_start(b'DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE', -1)
+    interface.scrollingLayer5_start(b'DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE', -1)
 
 def clear():
     interface.scrollingLayer1_start(b'', -1)

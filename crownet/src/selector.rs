@@ -65,7 +65,7 @@ pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, selector: &mut NcS
 fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
     match choice {
         Command::Clear => py_rpc::clear(&rpc_config),
-        Command::Caw => py_rpc::caw(&rpc_config),
+        Command::CAW => py_rpc::caw(&rpc_config),
         Command::DOPAMINE => py_rpc::dopamine(&rpc_config),
         Command::RandomPixels => py_rpc::pixels(&rpc_config),
         Command::RandomShapes => py_rpc::shapes(&rpc_config),

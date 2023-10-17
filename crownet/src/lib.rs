@@ -9,7 +9,7 @@ use strum_macros::EnumString;
 #[derive(EnumString)]
 pub enum Command {
     Clear,
-    Caw,
+    CAW,
     DOPAMINE,
     RandomPixels,
     RandomPixelsBG,
