@@ -9,6 +9,7 @@ use strum_macros::EnumString;
 #[derive(EnumString)]
 pub enum Command {
     Clear,
+    ClearText,
     CAW,
     DOPAMINE,
     RandomPixels,
@@ -85,6 +86,7 @@ impl Planes<'_> {
         let sel_plane: &mut NcPlane = NcPlane::new_child(stdplane, &plane_opts).unwrap();
         let selector = NcSelector::builder()
             .item("Clear", "clears the chyron")
+            .item("ClearText", "clears text")
             .item("CAW", "CAW CAW CAW CAW CAW")
             .item("DOPAMINE", "DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE")
             .item("RandomPixels", "asdfasdhfkalshdg")

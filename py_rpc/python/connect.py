@@ -71,6 +71,13 @@ def dopamine():
     interface.scrollingLayer4_start(b'DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE', -1)
     interface.scrollingLayer5_start(b'DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE DOPAMINE', -1)
 
+def clear_text():
+    interface.scrollingLayer1_start(b'', -1)
+    interface.scrollingLayer2_start(b'', -1)
+    interface.scrollingLayer3_start(b'', -1)
+    interface.scrollingLayer4_start(b'', -1)
+    interface.scrollingLayer5_start(b'', -1)
+
 def clear():
     interface.scrollingLayer1_start(b'', -1)
     interface.scrollingLayer2_start(b'', -1)

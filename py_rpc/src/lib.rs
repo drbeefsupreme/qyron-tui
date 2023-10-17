@@ -211,6 +211,17 @@ pub fn clear(config: &Config) -> PyResult<()> {
 
     Ok(())
 }
+pub fn clear_text(config: &Config) -> PyResult<()> {
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("clear_text")?
+            .into();
+        hand.call0(py)
+    })?;
+
+    Ok(())
+}
+
 
 pub fn pixels(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {

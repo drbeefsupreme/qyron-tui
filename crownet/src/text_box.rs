@@ -143,9 +143,9 @@ pub fn run_layer_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, selector: &m
 }
 
 fn send_text(layer: LayerCommand, speed: u32, text: String, rpc_config: &py_rpc::Config) {
-    let mut speed = speed * 25;
-    if speed == 25 {
-        speed = 3;
+    let mut speed = speed * 10;
+    if speed == 10 {
+        speed = 2;
     };
     match layer {
         LayerCommand::Layer1 => {
