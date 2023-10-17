@@ -84,6 +84,8 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
         Command::GifB => py_rpc::gifB(&rpc_config),
         Command::GifT => py_rpc::gifT(&rpc_config),
         Command::GifA => py_rpc::gifA(&rpc_config),
+        Command::GifH => py_rpc::gifH(&rpc_config),
+        Command::GifP => py_rpc::gifP(&rpc_config),
 
         Command::RandomShapesBG => py_rpc::shapesBg(&rpc_config),
         Command::RandomPixelsBG => py_rpc::pixelsBg(&rpc_config),

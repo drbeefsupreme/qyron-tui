@@ -32,6 +32,8 @@ pub enum Command {
     GifB,
     GifT,
     GifA,
+    GifH,
+    GifP,
     Text,
 }
 
@@ -104,13 +106,15 @@ impl Planes<'_> {
             .item("GifJ", "joker")
             .item("GifS", "spooky")
             .item("GifB", "subgenius")
+            .item("GifH", "hank")
+            .item("GifP", "bluechew")
 //            .item("GifT", "transparent")
             .item("GifA", "alex jones")
     //        .item("Temperature", "DEBUG: CPU temp")
             .title("CrowNet")
             .secondary("Institute for Advanced Levels")
             .footer("The Too Late Show with Dr. Beelzebub Crow")
-            .max_display(7)
+            .max_display(10)
             .default_item(1)
             .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
             .item_channels(
