@@ -22,6 +22,15 @@ pub enum Command {
     NoGif,
     EnableGifsLoop,
     DisableGifsLoop,
+    GifK,
+    GifO,
+    GifF,
+    GifD,
+    GifJ,
+    GifS,
+    GifB,
+    GifT,
+    GifA,
     Text,
 }
 
@@ -86,6 +95,15 @@ impl Planes<'_> {
             .item("NoGif", "bye")
             .item("EnableGifsLoop", "cycle")
             .item("DisableGifsLoop", "nocycle")
+            .item("GifK", "koyaanisqatsi")
+            .item("GifO", "obama")
+            .item("GifF", "flags")
+            .item("GifD", "drugs")
+            .item("GifJ", "joker")
+            .item("GifS", "spooky")
+            .item("GifB", "subgenius")
+//            .item("GifT", "transparent")
+            .item("GifA", "alex jones")
     //        .item("Temperature", "DEBUG: CPU temp")
             .title("CrowNet")
             .secondary("Institute for Advanced Levels")

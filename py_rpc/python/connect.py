@@ -57,6 +57,25 @@ def enableGifsLoop():
 def disableGifsLoop():
     interface.disableGifsLoop()
 
+def gifK():
+    interface.gifK()
+def gifO():
+    interface.gifO()
+def gifF():
+    interface.gifF()
+def gifD():
+    interface.gifD()
+def gifJ():
+    interface.gifJ()
+def gifS():
+    interface.gifS()
+def gifB():
+    interface.gifB()
+def gifT():
+    interface.gifT()
+def gifA():
+    interface.gifA()
+
 def pixels():
     interface.drawRandomPixels()
 

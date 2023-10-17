@@ -213,3 +213,94 @@ pub fn temp(config: &Config) -> PyResult<()> {
 
     Ok(())
 }
+
+pub fn gifK(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifK")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifO(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifO")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifF(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifF")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifD(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifD")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifJ(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifJ")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifS(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifS")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifB(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifB")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifT(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifT")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
+pub fn gifA(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifA")?
+            .into();
+        hand.call0(py)
+    });
+
+    Ok(())
+}
