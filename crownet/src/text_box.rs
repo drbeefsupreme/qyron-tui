@@ -7,7 +7,6 @@ use std::borrow::BorrowMut;
 use crate::CurrentPlane;
 use crate::LayerCommand;
 
-//TODO make a selector for which layer to write on
 pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader,
                 selector: &mut NcSelector,
                 current_plane: &mut CurrentPlane)
@@ -61,87 +60,82 @@ pub fn run_layer_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, selector: &m
                           -> (LayerCommand, u32)
 {
     let mut ni: NcInput = NcInput::new_empty();
-    let mut speed: u32 = 5;
+    // default speed is 4
+    let mut speed: u32 = 4;
 
     // do not wait for input before first rendering
     nc.render();
 
     loop {
-//        match current_plane {
-//            CurrentPlane::Selector => {
+        let keypress: NcReceived = nc.get_blocking(Some(&mut ni)).unwrap();
 
-                let keypress: NcReceived = nc.get_blocking(Some(&mut ni)).unwrap();
+        if !selector.offer_input(ni) {
+            // do not consider release key: only press
+            if ni.evtype == NcInputType::Release as u32 {
+                continue;
+            }
 
-                if !selector.offer_input(ni) {
-                    // do not consider release key: only press
-                    if ni.evtype == NcInputType::Release as u32 {
-                        continue;
-                    }
-
-                    match keypress {
-                        NcReceived::Char(ch) => {
-                            match ch {
-                                // Q => quit
-                                'q' | 'Q' => {
-                                    return (LayerCommand::Cancel, 5);
-                                },
-                                // S => down
-                                's' | 'S' => {
-                                    selector.nextitem().unwrap();
-                                },
-                                // W => up
-                                'w' | 'W' => {
-                                    selector.previtem().unwrap();
-                                },
-                                '1' => {
-                                    speed = 1;
-                                },
-                                '2' => {
-                                    speed = 2;
-                                },
-                                '3' => {
-                                    speed = 3;
-                                },
-                                '4' => {
-                                    speed = 4;
-                                },
-                                '5' => {
-                                    speed = 5;
-                                },
-                                '6' => {
-                                    speed = 6;
-                                },
-                                '7' => {
-                                    speed = 7;
-                                },
-                                '8' => {
-                                    speed = 8;
-                                },
-                                '9' => {
-                                    speed = 9;
-                                },
-                                '0' => {
-                                    speed = 10;
-                                },
-                                _ => (),
-                            }
+            match keypress {
+                NcReceived::Char(ch) => {
+                    match ch {
+                        // Q => quit
+                        'q' | 'Q' => {
+                            return (LayerCommand::Cancel, 5);
                         },
-                        NcReceived::Key(ev) => match ev {
-                            NcKey::Enter => {
-                                let choice = selector.selected().ok_or_else(|| NcError::new()).unwrap();
-                                return (LayerCommand::from_str(&choice).unwrap(), speed);
-                            },
-                            NcKey::Home => {
-                                return (LayerCommand::Cancel, 5);
-                            },
-                            _ => break,
+                        // S => down
+                        's' | 'S' => {
+                            selector.nextitem().unwrap();
                         },
-                        _ => break,
+                        // W => up
+                        'w' | 'W' => {
+                            selector.previtem().unwrap();
+                        },
+                        '1' => {
+                            speed = 1;
+                        },
+                        '2' => {
+                            speed = 2;
+                        },
+                        '3' => {
+                            speed = 3;
+                        },
+                        '4' => {
+                            speed = 4;
+                        },
+                        '5' => {
+                            speed = 5;
+                        },
+                        '6' => {
+                            speed = 6;
+                        },
+                        '7' => {
+                            speed = 7;
+                        },
+                        '8' => {
+                            speed = 8;
+                        },
+                        '9' => {
+                            speed = 9;
+                        },
+                        '0' => {
+                            speed = 10;
+                        },
+                        _ => (),
                     }
-                 }
-//            },
-//            _ => break,
-//        }
+                },
+                NcReceived::Key(ev) => match ev {
+                    NcKey::Enter => {
+                        let choice = selector.selected().ok_or_else(|| NcError::new()).unwrap();
+                        return (LayerCommand::from_str(&choice).unwrap(), speed);
+                    },
+                    NcKey::Home => {
+                        return (LayerCommand::Cancel, 5);
+                    },
+                    _ => break,
+                },
+                _ => break,
+            }
+         }
 
         nc.render();
     }
@@ -155,24 +149,24 @@ fn send_text(layer: LayerCommand, speed: u32, text: String, rpc_config: &py_rpc:
     };
     match layer {
         LayerCommand::Layer1 => {
-            py_rpc::speed1(&rpc_config, speed)
-            py_rpc::text1(&rpc_config, text);
+            py_rpc::speed1(&rpc_config, speed);
+            py_rpc::text1(&rpc_config, text)
         },
         LayerCommand::Layer2 => {
-            py_rpc::speed2(&rpc_config, speed)
-            py_rpc::text2(&rpc_config, text);
+            py_rpc::speed2(&rpc_config, speed);
+            py_rpc::text2(&rpc_config, text)
         },
          LayerCommand::Layer3 => {
-            py_rpc::speed3(&rpc_config, speed)
-            py_rpc::text3(&rpc_config, text);
+            py_rpc::speed3(&rpc_config, speed);
+            py_rpc::text3(&rpc_config, text)
         },
         LayerCommand::Layer4 => {
-            py_rpc::speed4(&rpc_config, speed)
-            py_rpc::text4(&rpc_config, text);
+            py_rpc::speed4(&rpc_config, speed);
+            py_rpc::text4(&rpc_config, text)
         },
         LayerCommand::Layer5 => {
-            py_rpc::speed5(&rpc_config, speed)
-            py_rpc::text5(&rpc_config, text);
+            py_rpc::speed5(&rpc_config, speed);
+            py_rpc::text5(&rpc_config, text)
         },
         _ => Ok(()),
     };

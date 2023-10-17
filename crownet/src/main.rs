@@ -18,6 +18,7 @@ fn main() -> NcResult<()> {
     let planes = Planes::init(stdplane);
 
     let mut current_plane = CurrentPlane::TextBox;
+    nc.render();
 
     loop {
         match current_plane {
