@@ -29,14 +29,25 @@ def caw():
 
 def text1(text):
     interface.scrollingLayer1_start(bytes(text), -1)
+def speed1(speed):
+    interface.scrollingLayer1_speed(speed)
 def text2(text):
     interface.scrollingLayer2_start(bytes(text), -1)
+def speed2(speed):
+    interface.scrollingLayer2_speed(speed)
 def text3(text):
     interface.scrollingLayer3_start(bytes(text), -1)
+def speed3(speed):
+    interface.scrollingLayer3_speed(speed)
 def text4(text):
     interface.scrollingLayer4_start(bytes(text), -1)
+def speed4(speed):
+    interface.scrollingLayer4_speed(speed)
 def text5(text):
     interface.scrollingLayer5_start(bytes(text), -1)
+def speed5(speed):
+    interface.scrollingLayer5_speed(speed)
+
 
 def dopamine():
     interface.scrollingLayer2_start(b'DOPAMINE DOPAMINE DOPAMINE', -1)

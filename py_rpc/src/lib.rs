@@ -90,11 +90,33 @@ pub fn text1(config: &Config, text: String) -> PyResult<()> {
 
     Ok(())
 }
+pub fn speed1(config: &Config, speed: u32) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[speed]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("speed1")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
 pub fn text2(config: &Config, text: String) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let args = PyTuple::new(py, &[text.as_bytes()]);
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("text2")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
+pub fn speed2(config: &Config, speed: u32) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[speed]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("speed2")?
             .into();
         hand.call1(py, args)
     })?;
@@ -112,6 +134,17 @@ pub fn text3(config: &Config, text: String) -> PyResult<()> {
 
     Ok(())
 }
+pub fn speed3(config: &Config, speed: u32) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[speed]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("speed3")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
 pub fn text4(config: &Config, text: String) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let args = PyTuple::new(py, &[text.as_bytes()]);
@@ -123,11 +156,33 @@ pub fn text4(config: &Config, text: String) -> PyResult<()> {
 
     Ok(())
 }
+pub fn speed4(config: &Config, speed: u32) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[speed]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("speed4")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
 pub fn text5(config: &Config, text: String) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let args = PyTuple::new(py, &[text.as_bytes()]);
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
             .getattr("text5")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
+pub fn speed5(config: &Config, speed: u32) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[speed]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("speed5")?
             .into();
         hand.call1(py, args)
     })?;
