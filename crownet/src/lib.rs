@@ -35,6 +35,7 @@ pub enum Command {
     GifH,
     GifP,
     Text,
+    ToggleTextMode,
 }
 
 #[derive(EnumString)]
