@@ -75,6 +75,9 @@ pub struct Planes<'a> {
     pub reader: &'a mut NcReader,
     pub selector: &'a mut NcSelector,
     pub text_layer_selector: &'a mut NcSelector,
+    pub reader_indicator: &'a mut NcPlane,
+    pub selector_indicator: &'a mut NcPlane,
+    pub text_layer_selector_indicator: &'a mut NcPlane,
 }
 
 impl Planes<'_> {
@@ -145,10 +148,36 @@ impl Planes<'_> {
             .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
             .finish(text_sel_plane).unwrap();
 
+        // Create indicator planes
+        let reader_indicator = NcPlane::new_child(stdplane, &NcPlaneOptions::new_aligned(0, NcAlign::Left, 1, 3)).unwrap();
+        let selector_indicator = NcPlane::new_child(stdplane, &NcPlaneOptions::new_aligned(14, NcAlign::Left, 1, 3)).unwrap();
+        let text_layer_selector_indicator = NcPlane::new_child(stdplane, &NcPlaneOptions::new_aligned(4, NcAlign::Right, 1, 3)).unwrap();
+
         Self {
             reader,
             selector,
             text_layer_selector: text_sel_selector,
+            reader_indicator,
+            selector_indicator,
+            text_layer_selector_indicator,
         }
+    }
+
+    pub fn update_indicator(&mut self, current_plane: &CurrentPlane) {
+        // Clear all indicators
+        self.reader_indicator.erase();
+        self.selector_indicator.erase();
+        self.text_layer_selector_indicator.erase();
+
+        // Set the active indicator
+        let active_indicator = match current_plane {
+            CurrentPlane::TextBox => &mut self.reader_indicator,
+            CurrentPlane::Selector => &mut self.selector_indicator,
+            CurrentPlane::TextLayerSelector => &mut self.text_layer_selector_indicator,
+        };
+
+        active_indicator.set_bg_rgb(0xffff00); // Yellow background
+        active_indicator.putstr(">>>"); // Arrow indicator
+        active_indicator.render(); // Use render() instead of refresh()
     }
 }

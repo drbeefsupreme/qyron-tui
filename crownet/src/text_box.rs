@@ -1,6 +1,6 @@
 use py_rpc;
 use notcurses::sys::{widgets::*, *};
-use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_clear};
+use libnotcurses_sys::c_api::{ncreader, ncreader_write_egc, ncreader_contents, ncreader_clear, ncreader_move_left};
 use std::ffi::{CStr, CString};
 use std::str::FromStr;
 use std::borrow::BorrowMut;
@@ -20,35 +20,45 @@ pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader,
             CurrentPlane::TextBox => {
                 let keypress: NcReceived = nc.get_blocking(Some(&mut ni)).expect("keypress");
                 match keypress {
-                   NcReceived::Char(ch) => {
-                       match ch {
-                           a => {
-                               text_vec.push(a as u8);
-                               let print_this = unsafe { CString::new(&[a as u8]).unwrap_unchecked() };
-                               unsafe {
-                                   ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr());
-                               }
-                           }
-                       }
-                   },
-                   NcReceived::Key(ev) => match ev {
-                       NcKey::Enter => {
-                           // let contents = unsafe { ncreader_contents(reader as *mut ncreader) };
-                           // let cstr_contents = unsafe { CStr::from_ptr(contents) };
-                           // let contents_string = cstr_contents.to_str().unwrap().to_owned();
-                           let contents_string = String::from_utf8(text_vec).unwrap();
-                           let (layer, speed) = run_layer_selector(nc, rpc_config, selector);
-                           send_text(layer, speed, contents_string, &rpc_config);
-                           text_vec = Vec::<u8>::new();
-                       },
-                       NcKey::Home => {
-                           *current_plane = CurrentPlane::Selector;
-                           break;
-                       },
-                       _ => break,
-                   },
-                _ => (),
-               }
+                    NcReceived::Char(ch) => {
+                        match ch {
+                            a => {
+                                text_vec.push(a as u8);
+                                let print_this = unsafe { CString::new(&[a as u8]).unwrap_unchecked() };
+                                unsafe {
+                                    ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr());
+                                }
+                            }
+                        }
+                    },
+                    NcReceived::Key(ev) => match ev {
+                        NcKey::Enter => {
+                            let contents_string = String::from_utf8(text_vec).unwrap();
+                            let (layer, speed) = run_layer_selector(nc, rpc_config, selector);
+                            send_text(layer, speed, contents_string, &rpc_config);
+                            text_vec = Vec::<u8>::new();
+                            unsafe {
+                                ncreader_clear(reader);
+                            }
+                        },
+                        NcKey::Backspace => {
+                            if !text_vec.is_empty() {
+                                text_vec.pop();
+                                unsafe {
+                                    ncreader_move_left(reader);
+                                    ncreader_write_egc(reader as *mut ncreader, CString::new(" ").unwrap().as_ptr());
+                                    ncreader_move_left(reader);
+                                }
+                            }
+                        },
+                        NcKey::Home => {
+                            *current_plane = CurrentPlane::Selector;
+                            break;
+                        },
+                        _ => break,
+                    },
+                    _ => (),
+                }
             },
             _ => break,
         }

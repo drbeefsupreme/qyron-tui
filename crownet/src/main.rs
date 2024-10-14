@@ -15,7 +15,7 @@ fn main() -> NcResult<()> {
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
     stdplane.set_fg_rgb(0x40f040);
 
-    let planes = Planes::init(stdplane);
+    let mut planes = Planes::init(stdplane);
 
     let mut current_plane = CurrentPlane::TextBox;
     nc.render();
@@ -29,7 +29,12 @@ fn main() -> NcResult<()> {
                 run_selector(nc, &rpc_config, planes.selector, &mut current_plane);
             },
             _ => (),
+//            CurrentPlane::TextLayerSelector => {
+//                run_layer_selector(nc, &rpc_config, planes.text_layer_selector, &mut current_plane);
+//            },
         }
+        planes.update_indicator(&current_plane);
+        nc.render();
     }
 
 //    unsafe { nc.stop()? };
