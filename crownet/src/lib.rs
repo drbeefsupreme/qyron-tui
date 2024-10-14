@@ -79,7 +79,7 @@ pub struct Planes<'a> {
 
 impl Planes<'_> {
     pub fn init(stdplane: &mut NcPlane) -> Self {
-        let reader_opts = NcPlaneOptions::new_aligned(10, NcAlign::Center, 150, 80);
+        let reader_opts = NcPlaneOptions::new_aligned(1, NcAlign::Center, 150, 80);
         let reader_plane: &mut NcPlane = NcPlane::new_child(stdplane, &reader_opts).unwrap();
         reader_plane.set_bg_rgb(0x40f040); //TODO is this doing anything?
         let reader = NcReader::new(reader_plane).unwrap();
