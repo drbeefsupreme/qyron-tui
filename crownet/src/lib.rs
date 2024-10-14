@@ -112,6 +112,7 @@ impl Planes<'_> {
             .item("GifB", "subgenius")
             .item("GifH", "hank")
             .item("GifP", "bluechew")
+            .item("ToggleTextMode", "toggle text mode")
             //            .item("GifT", "transparent")
             .item("GifA", "alex jones")
             //        .item("Temperature", "DEBUG: CPU temp")
