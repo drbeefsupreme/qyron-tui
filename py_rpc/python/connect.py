@@ -57,6 +57,8 @@ def text5(text):
     interface.scrollingLayer5_start(bytes(text), -1)
 def speed5(speed):
     interface.scrollingLayer5_speed(speed)
+def textT(text):
+    interface.scrollingLayerT_start(bytes(text), -1)
 
 def dopamine():
     interface.scrollingLayer1_speed(random.randrange(1, 100))

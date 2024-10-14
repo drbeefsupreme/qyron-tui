@@ -186,6 +186,9 @@ fn send_text(layer: LayerCommand, speed: u32, text: String, rpc_config: &py_rpc:
             py_rpc::speed5(&rpc_config, speed);
             py_rpc::text5(&rpc_config, text)
         }
+        LayerCommand::LayerT => {
+            py_rpc::textT(&rpc_config, text)
+        }
         _ => Ok(()),
     };
 }

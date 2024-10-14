@@ -45,6 +45,7 @@ pub enum LayerCommand {
     Layer3,
     Layer4,
     Layer5,
+    LayerT,
     Cancel,
 }
 
@@ -139,8 +140,9 @@ impl Planes<'_> {
             .item("Layer3", "layer 3")
             .item("Layer4", "layer 4")
             .item("Layer5", "layer 5")
+            .item("LayerT", "layer T")
             .title("Select a layer")
-            .max_display(5)
+            .max_display(6)
             .default_item(1)
             .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
             .item_channels(

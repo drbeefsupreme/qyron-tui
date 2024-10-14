@@ -189,6 +189,17 @@ pub fn speed5(config: &Config, speed: u32) -> PyResult<()> {
 
     Ok(())
 }
+pub fn textT(config: &Config, text: String) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let args = PyTuple::new(py, &[text.as_bytes()]);
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("textT")?
+            .into();
+        hand.call1(py, args)
+    })?;
+
+    Ok(())
+}
 
 pub fn dopamine(config: &Config) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
