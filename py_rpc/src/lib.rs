@@ -2,7 +2,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyTuple;
 
 pub struct Config {
-    pub file: &'static str
+    pub file: &'static str,
 }
 
 impl Config {
@@ -222,7 +222,6 @@ pub fn clear_text(config: &Config) -> PyResult<()> {
     Ok(())
 }
 
-
 pub fn pixels(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
@@ -266,8 +265,6 @@ pub fn shapesBg(config: &Config) -> PyResult<()> {
 
     Ok(())
 }
-
-
 
 pub fn temp(config: &Config) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {

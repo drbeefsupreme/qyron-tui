@@ -1,5 +1,5 @@
-pub mod text_box;
 pub mod selector;
+pub mod text_box;
 
 use notcurses::sys::{widgets::*, *};
 use std::str::FromStr;
@@ -111,9 +111,9 @@ impl Planes<'_> {
             .item("GifB", "subgenius")
             .item("GifH", "hank")
             .item("GifP", "bluechew")
-//            .item("GifT", "transparent")
+            //            .item("GifT", "transparent")
             .item("GifA", "alex jones")
-    //        .item("Temperature", "DEBUG: CPU temp")
+            //        .item("Temperature", "DEBUG: CPU temp")
             .title("CrowNet")
             .secondary("Institute for Advanced Levels")
             .footer("The Too Late Show with Dr. Beelzebub Crow")
@@ -126,7 +126,8 @@ impl Planes<'_> {
             )
             .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
             .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
-            .finish(sel_plane).unwrap();
+            .finish(sel_plane)
+            .unwrap();
 
         let text_sel_opts = NcPlaneOptions::new_aligned(5, NcAlign::Right, 150, 80);
         let text_sel_plane = NcPlane::new_child(stdplane, &text_sel_opts).unwrap();
@@ -139,19 +140,32 @@ impl Planes<'_> {
             .title("Select a layer")
             .max_display(5)
             .default_item(1)
-             .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
+            .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
             .item_channels(
                 NcChannels::from_rgb(0xe08040, 0),
                 NcChannels::from_rgb(0x80e040, 0),
             )
             .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
             .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
-            .finish(text_sel_plane).unwrap();
+            .finish(text_sel_plane)
+            .unwrap();
 
         // Create indicator planes
-        let reader_indicator = NcPlane::new_child(stdplane, &NcPlaneOptions::new_aligned(0, NcAlign::Left, 1, 3)).unwrap();
-        let selector_indicator = NcPlane::new_child(stdplane, &NcPlaneOptions::new_aligned(14, NcAlign::Left, 1, 3)).unwrap();
-        let text_layer_selector_indicator = NcPlane::new_child(stdplane, &NcPlaneOptions::new_aligned(4, NcAlign::Right, 1, 3)).unwrap();
+        let reader_indicator = NcPlane::new_child(
+            stdplane,
+            &NcPlaneOptions::new_aligned(0, NcAlign::Left, 1, 3),
+        )
+        .unwrap();
+        let selector_indicator = NcPlane::new_child(
+            stdplane,
+            &NcPlaneOptions::new_aligned(14, NcAlign::Left, 1, 3),
+        )
+        .unwrap();
+        let text_layer_selector_indicator = NcPlane::new_child(
+            stdplane,
+            &NcPlaneOptions::new_aligned(4, NcAlign::Right, 1, 3),
+        )
+        .unwrap();
 
         Self {
             reader,

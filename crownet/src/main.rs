@@ -1,9 +1,9 @@
-use py_rpc;
 use notcurses::sys::*;
+use py_rpc;
 
-use crownet::{Planes, CurrentPlane};
-use crownet::text_box::*;
 use crownet::selector::*;
+use crownet::text_box::*;
+use crownet::{CurrentPlane, Planes};
 
 fn main() -> NcResult<()> {
     let rpc_config = py_rpc::Config::new();
@@ -23,21 +23,27 @@ fn main() -> NcResult<()> {
     loop {
         match current_plane {
             CurrentPlane::TextBox => {
-                text_box(nc, &rpc_config, planes.reader, planes.text_layer_selector, &mut current_plane);
-            },
+                text_box(
+                    nc,
+                    &rpc_config,
+                    planes.reader,
+                    planes.text_layer_selector,
+                    &mut current_plane,
+                );
+            }
             CurrentPlane::Selector => {
                 run_selector(nc, &rpc_config, planes.selector, &mut current_plane);
-            },
+            }
             _ => (),
-//            CurrentPlane::TextLayerSelector => {
-//                run_layer_selector(nc, &rpc_config, planes.text_layer_selector, &mut current_plane);
-//            },
+            //            CurrentPlane::TextLayerSelector => {
+            //                run_layer_selector(nc, &rpc_config, planes.text_layer_selector, &mut current_plane);
+            //            },
         }
         planes.update_indicator(&current_plane);
         nc.render();
     }
 
-//    unsafe { nc.stop()? };
+    //    unsafe { nc.stop()? };
 
-//    Ok(())
+    //    Ok(())
 }

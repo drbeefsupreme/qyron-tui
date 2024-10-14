@@ -1,12 +1,15 @@
-use py_rpc;
 use notcurses::sys::{widgets::*, *};
+use py_rpc;
 
 use crate::{Command, CurrentPlane};
 use std::str::FromStr;
 
-
-pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, selector: &mut NcSelector,
-    current_plane: &mut CurrentPlane) {
+pub fn run_selector(
+    nc: &mut Nc,
+    rpc_config: &py_rpc::Config,
+    selector: &mut NcSelector,
+    current_plane: &mut CurrentPlane,
+) {
     let mut ni: NcInput = NcInput::new_empty();
 
     // do not wait for input before first rendering
@@ -29,32 +32,33 @@ pub fn run_selector(nc: &mut Nc, rpc_config: &py_rpc::Config, selector: &mut NcS
                                 // Q => quit
                                 'q' | 'Q' => {
                                     send_choice(Command::Quit, &rpc_config);
-                                },
+                                }
                                 // S => down
                                 's' | 'S' => {
                                     selector.nextitem().unwrap();
-                                },
+                                }
                                 // W => up
                                 'w' | 'W' => {
                                     selector.previtem().unwrap();
-                                },
+                                }
                                 _ => (),
                             }
-                        },
+                        }
                         NcReceived::Key(ev) => match ev {
                             NcKey::Enter => {
-                                let choice = selector.selected().ok_or_else(|| NcError::new()).unwrap();
+                                let choice =
+                                    selector.selected().ok_or_else(|| NcError::new()).unwrap();
                                 send_choice(Command::from_str(&choice).unwrap(), &rpc_config);
-                            },
+                            }
                             NcKey::Home => {
                                 *current_plane = CurrentPlane::TextBox;
-                            },
+                            }
                             _ => break,
                         },
                         _ => break,
                     }
-                 }
-            },
+                }
+            }
             _ => break,
         }
 
@@ -71,8 +75,8 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
         Command::RandomPixels => py_rpc::pixels(&rpc_config),
         Command::RandomShapes => py_rpc::shapes(&rpc_config),
         Command::Temperature => py_rpc::temp(&rpc_config),
-        Command::NextGif     => py_rpc::nextGif(&rpc_config),
-        Command::NoGif       => py_rpc::noGif(&rpc_config),
+        Command::NextGif => py_rpc::nextGif(&rpc_config),
+        Command::NoGif => py_rpc::noGif(&rpc_config),
         Command::EnableGifsLoop => py_rpc::enableGifsLoop(&rpc_config),
         Command::DisableGifsLoop => py_rpc::disableGifsLoop(&rpc_config),
         Command::GifK => py_rpc::gifK(&rpc_config),
