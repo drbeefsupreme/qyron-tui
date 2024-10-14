@@ -6,9 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# notcurses = "3.2.3"
-notcurses = { path = "../../notcurses-rs" }
-libnotcurses-sys = { path = "../../libnotcurses-sys" }
+notcurses = "3.6.0"
+# notcurses = { path = "../../notcurses-rs" }
+# libnotcurses-sys = { path = "../../libnotcurses-sys" }
+libnotcurses-sys = "3.11.0"
 py_rpc = { path = "../py_rpc" }
 strum = "0.25"
 strum_macros = "0.25"

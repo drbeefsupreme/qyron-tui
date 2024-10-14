@@ -24,9 +24,9 @@ pub fn text_box(nc: &mut Nc, rpc_config: &py_rpc::Config, reader: &mut NcReader,
                        match ch {
                            a => {
                                text_vec.push(a as u8);
-                               let print_this = unsafe { CString::from_vec_unchecked(vec![a as u8]) };
+                               let print_this = unsafe { CString::new(&[a as u8]).unwrap_unchecked() };
                                unsafe {
-                                   ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr() as *const u8);
+                                   ncreader_write_egc(reader as *mut ncreader, print_this.as_ptr());
                                }
                            }
                        }
