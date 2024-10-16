@@ -34,6 +34,7 @@ pub enum Command {
     GifA,
     GifH,
     GifP,
+    GifC,
     Text,
     ToggleTextMode,
 }
@@ -113,6 +114,7 @@ impl Planes<'_> {
             .item("GifB", "subgenius")
             .item("GifH", "hank")
             .item("GifP", "bluechew")
+            .item("GifC", "judge")
             .item("ToggleTextMode", "toggle text mode")
             //            .item("GifT", "transparent")
             .item("GifA", "alex jones")

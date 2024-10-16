@@ -121,6 +121,8 @@ def gifP():
     interface.gifP()
 def gifH():
     interface.gifH()
+def gifC():
+    interface.gifC()
 
 def pixels():
     interface.drawRandomPixels()
