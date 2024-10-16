@@ -91,6 +91,7 @@ fn send_choice(choice: Command, rpc_config: &py_rpc::Config) {
         Command::GifH => py_rpc::gifH(&rpc_config),
         Command::GifP => py_rpc::gifP(&rpc_config),
         Command::GifC => py_rpc::gifC(&rpc_config),
+        Command::GifM => py_rpc::gifM(&rpc_config),
         Command::ToggleTextMode => py_rpc::toggle_text_mode(&rpc_config),
 
         Command::RandomShapesBG => py_rpc::shapesBg(&rpc_config),

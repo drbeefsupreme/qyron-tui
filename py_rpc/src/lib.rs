@@ -399,7 +399,16 @@ pub fn gifH(config: &Config) -> PyResult<()> {
 
     Ok(())
 }
+pub fn gifM(config: &Config) -> PyResult<()> {
+    let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+        let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?
+            .getattr("gifM")?
+            .into();
+        hand.call0(py)
+    });
 
+    Ok(())
+}
 pub fn gifC(config: &Config) -> PyResult<()> {
     let a = Python::with_gil(|py| -> PyResult<Py<PyAny>> {
         let hand: Py<PyAny> = PyModule::from_code(py, config.file, "", "")?

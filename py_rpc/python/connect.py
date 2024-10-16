@@ -123,6 +123,8 @@ def gifH():
     interface.gifH()
 def gifC():
     interface.gifC()
+def gifM():
+    interface.gifM()
 
 def pixels():
     interface.drawRandomPixels()
